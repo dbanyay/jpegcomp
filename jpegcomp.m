@@ -35,9 +35,18 @@ end
 
 %%% plot error graph
 
-for i = 1:9
-    
-    
+error = zeros(9,1)
+
+for i = 1:9   
+  
+    error(i) = immse(im,uint8(imjpg(:,:,i)))
     
 end
 
+figure;
+
+stem(error)
+xticklabels({'10%','20%','30%','40%','50%','60%','70%','80%','90%'})
+title('Mean squared error')
+xlabel('Compression rate')
+ylabel('Error rate')
