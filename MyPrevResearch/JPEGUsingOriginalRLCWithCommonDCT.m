@@ -6,9 +6,13 @@ aToz = 1;
 S = double(imread('lena512.bmp'));
 SS = size(S);
 
+%To convert rgb to gray use --> if numel(SS) > 2
 
-
+%Normalizing the values of the image around zero
 S = S - 128;
+
+
+%Making blocks of 8x8 pixels and taking dct of those 8x8 blocks
 
 SS(1) = SS(1) - rem(SS(1),8);
 SS(2) = SS(2) - rem(SS(2),8);
@@ -19,7 +23,7 @@ rowsmax = (SS(1)/8);
 columnsmax = (SS(2)/8);
 
 MatrixForEbyE = zeros(8,8);
-BlockDCT  = zeros(8,8);
+BlockDCT  = zeros(8,8);             %Temporary storage of dct coefficients
 
 for ro = 1:rowsmax
     for co = 1:columnsmax
@@ -29,7 +33,7 @@ for ro = 1:rowsmax
     end
 end
 
-CompleteDCT
+CompleteDCT;                        %Final DCT Coefficients
 
 
 for QF = [0:0.2:2,3:1:10]
@@ -37,10 +41,11 @@ tic
 QF;
     clear RLC
 
+%Defining Quantization Matrix
 for i = 1:8
-            for j = 1:8
-                Q(i,j) = 1+((i+j-1)*QF);
-            end
+    for j = 1:8
+        Q(i,j) = 1+((i+j-1)*QF);
+    end
 end
 
 n = 1;
