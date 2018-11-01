@@ -29,8 +29,8 @@ for index = 1:9
     
     imjpg(:,:,index) = imread(path);
     subplot(3,3,index);
-    imshow(uint8(imjpg(:,:,index)))
-    title(strcat('comp:',num2str(index*10),' Size: ',num2str(size,3),'kB'))
+    imshow(uint8(imjpg(:,:,index)),'InitialMagnification','fit')
+    title(strcat('QF:',num2str(index*10),' Size: ',num2str(size,3),'kB'))
 end
 
 %%% plot error graph
@@ -47,6 +47,6 @@ figure;
 
 stem(error)
 xticklabels({'10%','20%','30%','40%','50%','60%','70%','80%','90%'})
-title('Mean squared error')
-xlabel('Compression rate')
-ylabel('Error rate')
+title('Quality Factor Vs Mean Squared Error for JPEG Compression')
+xlabel('Quality Factor')
+ylabel('Mean Squared Error')
