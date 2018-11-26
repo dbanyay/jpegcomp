@@ -55,6 +55,7 @@ qInd = 1;
         24 35 55 64 81 104 113 92; ...
         49 64 78 87 103 121 120 101; ...
         72 92 95 98 112 100 103 99;];
+%         quantMJpeg = ones(8);
 
     %Quantizing the DCT Matrix using standard JPEG Quantization Matrix
     im_8x8_Quant(1:8,1:8,:) = floor(im_8x8_DCT(1:8,1:8,:)./quantMJpeg(1:8,1:8));
@@ -110,7 +111,9 @@ input2ZZScanOrig = invOrigRLC(oRLCoded,bSize);
 
 %Inverse Optimized RLC
 
-% input2ZZScanOpti = invOptiRLC(pRLCoded,bSize);
+input2ZZScanOpti = invOptiRLC(pRLCoded,bSize);
+error2 = zzOPVec - input2ZZScanOpti;
+stem(error2)
 %Inverse Optimized RLC
 
 %% Reverse Zig-Zag

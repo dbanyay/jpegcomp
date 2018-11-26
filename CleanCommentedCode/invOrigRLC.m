@@ -3,7 +3,7 @@ function [toBiZZOrig] = invOrigRLC(oRLCoded,bSize)
 %**************************************************************************
 %This function does the inverse of Original Run length encoded data in
 %oRLCoded with block size defined by bSize and returns the input to inverse
-%Zig Zag Sanning as toBiZZVec
+%Zig Zag Sanning as toBiZZOrig
 %**************************************************************************
 
 toBiZZOrig = zeros();
