@@ -16,7 +16,7 @@ end
 
 im = double(im);
     
-im = im - 128;
+% im = im - 128;
 % im = round(254*rand(8,18));                                                           %Test Image matrix
 
 % txt = sprintf('Number of Bytes required to transmit raw image = %d', size(im,1)*size(im,2));
@@ -101,11 +101,13 @@ plot(QuantizationValue,sizeOrig)
 
 %% Reverse Zig-Zag
 
+blocks  = revZigZag(zzOPVec,numOfBlocks);
+
 %% Reverse Quantization
 
 %% Reverse DCT and Block formation
 
-% im_deblock = deblock(im_8x8_DCT,newIm_size);
+im_deblock = deblock(blocks,newIm_size);
 
 % error = im(1:newIm_size(1),1:newIm_size(2)) - im_deblock 
 
