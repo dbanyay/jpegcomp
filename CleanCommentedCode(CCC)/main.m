@@ -16,8 +16,8 @@ end
 
 im = double(im);
     
-% im = im - 128;
-% im = round(254*rand(8,18));                                                           %Test Image matrix
+im = im - 128;
+im = round(254*rand(8,18));                                                           %Test Image matrix
 
 % txt = sprintf('Number of Bytes required to transmit raw image = %d', size(im,1)*size(im,2));
 % disp(txt)
@@ -54,10 +54,20 @@ im_8x8_Quant(1:8,1:8,:) = floor(im_8x8_DCT(1:8,1:8,:)./quantMJpeg(1:8,1:8));
 
 %Zigzag scan transform of all 8x8 quantized matrices to conacatenated row vectors
 %size of zzOPVec = (1, 8*8*numOfBlocks)
-%zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks,newIm_size);
-% size(zzOPVec)
+zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks);
+
+% sVec = size(zzOPVec)
+% sBlo = 64*numOfBlocks
 
 %% Run Length Coding
+
+%This section encodes the zigzag scanned row vector and it is of importance
+%to note here that zigzag scanned vector is a row vector.
+
+zzOPVec = [64 52 -1 0 1 0 2 0 19 0 0 0 8 0 0 0];
+numOfBlocks = 2;
+oRLCoded = origRLC(zzOPVec,numOfBlocks)
+% pRLCoded = propRLC(zzOPVec,numOfBlocks);
 
 %% Reverse Zig-Zag
 
