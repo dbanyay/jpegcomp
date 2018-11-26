@@ -64,9 +64,14 @@ zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks);
 %This section encodes the zigzag scanned row vector and it is of importance
 %to note here that zigzag scanned vector is a row vector.
 
-zzOPVec = [64 52 -1 0 1 0 2 0 19 0 0 0 8 0 0 0];
+bSize = 64;
+
+zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
 numOfBlocks = 2;
-oRLCoded = origRLC(zzOPVec,numOfBlocks)
+bSize = 8;
+
+[oRLCoded, txSize] = origRLC(zzOPVec,numOfBlocks,bSize)
+txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 % pRLCoded = propRLC(zzOPVec,numOfBlocks);
 
 %% Reverse Zig-Zag
