@@ -70,9 +70,13 @@ zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
 numOfBlocks = 2;
 bSize = 8;
 
+%Original RUn Length Encoder
 [oRLCoded, txSize] = origRLC(zzOPVec,numOfBlocks,bSize)
 txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
-% pRLCoded = propRLC(zzOPVec,numOfBlocks);
+
+%Optimized Run Length Encoder
+[pRLCoded, txSize] = propRLC(zzOPVec,numOfBlocks,bSize)
+txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 
 %% Reverse Zig-Zag
 
