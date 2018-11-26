@@ -1,8 +1,8 @@
 function [pRLCoded, txSize] = propRLC(zzOPVec,numOfBlocks,bSize);
 
 %**************************************************************************
-%This function implements the original run length coding which encodes the
-%zigzag scanned vector in the form (RUNLENGTH, SIZE)(AMPLITUDE), where:
+%This function implements the optimized run length coding which encodes the
+%zigzag scanned vector in the form (0,RUNLENGTH)(AMPLITUDE) only if a non zero integer in the block is preceded by a zero, where:
 %8 bits are used to encode (RUNLENGTH, SIZE) i.e. 4 bits for each RUNLENGTH and SIZE. 
 %x is the non-zero, quantized AC coefficient. 
 %RUNLENGTH is the number of zeroes that came before this non-zero AC coefficient. 

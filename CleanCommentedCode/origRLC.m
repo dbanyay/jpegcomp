@@ -3,7 +3,7 @@ function [oRLCoded, txSize] = origRLC(zzOPVec,numOfBlocks,bSize);
 %**************************************************************************
 %This function implements the original run length coding which encodes the
 %zigzag scanned vector in the form (RUNLENGTH, SIZE)(AMPLITUDE), where:
-%8 bits are used to encode (RUNLENGTH, SIZE) i.e. 4 bits for each RUNLENGTH and SIZE. 
+%In JPEG Standard 8 bits are used to encode (RUNLENGTH, SIZE) i.e. 4 bits for each RUNLENGTH and SIZE. 
 %x is the non-zero, quantized AC coefficient. 
 %RUNLENGTH is the number of zeroes that came before this non-zero AC coefficient. 
 %SIZE is the number of bits required to represent x. 
