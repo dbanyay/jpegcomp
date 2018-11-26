@@ -115,7 +115,8 @@ input2ZZScanOrig = invOrigRLC(oRLCoded,bSize);
 
 %% Reverse Zig-Zag
 
-blocks  = revZigZag(zzOPVec,numOfBlocks);
+blocks  = revZigZag(input2ZZScanOrig,numOfBlocks);
+blocks(1:8,1:8,:) = floor(blocks(1:8,1:8,:).*quantMJpeg(1:8,1:8));
 
 %% Reverse Quantization
 
