@@ -39,22 +39,22 @@ disp(txt)
 
 qInd = 1;
 
-for QF = [0:0.2:2,3:1:10];                                                                     %Quantization Factor
-    for i = 1:8
-        for j = 1:8
-            quantMJpeg(i,j) = 1+((i+j-1)*QF);
-        end
-    end
+% for QF = [0:0.2:2,3:1:10];                                                                     %Quantization Factor
+%     for i = 1:8
+%         for j = 1:8
+%             quantMJpeg(i,j) = 1+((i+j-1)*QF);
+%         end
+%     end
 
-    % % Standard JPEG Quantization Matrix
-    % quantMJpeg = [16 11 10 16 24 40 51 61; ...
-    %     12 12 14 19 26 58 60 55; ...
-    %     14 13 16 24 40 57 69 56; ...
-    %     14 17 22 29 51 87 80 62; ...
-    %     18 22 37 56 68 109 103 77; ...
-    %     24 35 55 64 81 104 113 92; ...
-    %     49 64 78 87 103 121 120 101; ...
-    %     72 92 95 98 112 100 103 99;];
+    % Standard JPEG Quantization Matrix
+    quantMJpeg = [16 11 10 16 24 40 51 61; ...
+        12 12 14 19 26 58 60 55; ...
+        14 13 16 24 40 57 69 56; ...
+        14 17 22 29 51 87 80 62; ...
+        18 22 37 56 68 109 103 77; ...
+        24 35 55 64 81 104 113 92; ...
+        49 64 78 87 103 121 120 101; ...
+        72 92 95 98 112 100 103 99;];
 
     %Quantizing the DCT Matrix using standard JPEG Quantization Matrix
     im_8x8_Quant(1:8,1:8,:) = floor(im_8x8_DCT(1:8,1:8,:)./quantMJpeg(1:8,1:8));
@@ -64,6 +64,8 @@ for QF = [0:0.2:2,3:1:10];                                                      
     %Zigzag scan transform of all 8x8 quantized matrices to conacatenated row vectors
     %size of zzOPVec = (1, 8*8*numOfBlocks)
     zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks);
+    size(zzOPVec);
+    8*8*numOfBlocks;
 
     % sVec = size(zzOPVec)
     % sBlo = 64*numOfBlocks
@@ -75,11 +77,11 @@ for QF = [0:0.2:2,3:1:10];                                                      
 
     bSize = 64;
 
-    % zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
-    % numOfBlocks = 2;
-    % bSize = 8;
+%     zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
+%     numOfBlocks = 2;
+%     bSize = 8;
 
-    %Original RUn Length Encoder
+    %Original Run Length Encoder
     [oRLCoded, txSizeOri] = origRLC(zzOPVec,numOfBlocks,bSize);
     sizeOrig(qInd) = ceil(txSizeOri/8);
     % txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
@@ -88,16 +90,28 @@ for QF = [0:0.2:2,3:1:10];                                                      
     [pRLCoded, txSizeOpt] = propRLC(zzOPVec,numOfBlocks,bSize);
     sizeOpti(qInd) = ceil(txSizeOpt/8);
     % txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
-    QuantizationValue(qInd) = QF;
-    qInd = qInd + 1;
+%     QuantizationValue(qInd) = QF;
+%     qInd = qInd + 1;
 
-end
+% end
 
-figure()
-plot(QuantizationValue,sizeOpti,'*-g')
-hold on;
-plot(QuantizationValue,sizeOrig)
+% figure()
+% plot(QuantizationValue,sizeOpti,'*-g')
+% hold on;
+% plot(QuantizationValue,sizeOrig)
 
+%% Reverse Run Length Coding
+
+%Inverse Original RLC
+
+input2ZZScanOrig = invOrigRLC(oRLCoded,bSize);
+% error = zzOPVec - input2ZZScanOrig;
+% stem(error)
+
+%Inverse Optimized RLC
+
+% input2ZZScanOpti = invOptiRLC(pRLCoded,bSize);
+%Inverse Optimized RLC
 
 %% Reverse Zig-Zag
 
