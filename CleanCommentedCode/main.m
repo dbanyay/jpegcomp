@@ -5,7 +5,7 @@ clc;
 
 %Read the image in Uint8 format and convert any rgb image to grayscale.
 
-im = imread('moon.jpg');
+im = imread('lena512.bmp');
 
 if numel(size(im)) > 2
     im = rgb2gray(im);
@@ -23,6 +23,7 @@ im = im - 128;
 % disp(txt)
 %% 8x8 Blocks Formation + DCT Transformation
 
+bSize = 64;
 %Making 8x8 blocks of image and taking DCT of each block
 [numOfBlocks, im_8x8_DCT, newIm_size] = blocks_8x8(im);
 
@@ -34,6 +35,11 @@ disp(txt)
 % numOfBlocks
 % size(imBlocks_8x8)
 % imBlocks_8x8
+
+%% Graphs for Comparison
+
+comparisonFun(numOfBlocks,sizeOfRawTxIm,im_8x8_DCT,bSize);
+
 
 %% Quantization
 
@@ -142,10 +148,10 @@ im_deblockOrig = im_deblockOrig + 128;
 figure()
 imshow(uint8(im_deblockOrig));
 
-im_deblockOpti = deblock(blocksOpti,newIm_size);
-im_deblockOpti = im_deblockOpti + 128;
-figure()
-imshow(uint8(im_deblockOpti));
+% im_deblockOpti = deblock(blocksOpti,newIm_size);
+% im_deblockOpti = im_deblockOpti + 128;
+% figure()
+% imshow(uint8(im_deblockOpti));
 % error = im(1:newIm_size(1),1:newIm_size(2)) - im_deblock 
 
 %% Tests
