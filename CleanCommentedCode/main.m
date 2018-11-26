@@ -118,11 +118,16 @@ stem(error2)
 
 %% Reverse Zig-Zag
 
+blocks  = revZigZag(input2ZZScanOrig,numOfBlocks);
+blocks(1:8,1:8,:) = floor(blocks(1:8,1:8,:).*quantMJpeg(1:8,1:8));
+
 %% Reverse Quantization
 
 %% Reverse DCT and Block formation
 
-% im_deblock = deblock(im_8x8_DCT,newIm_size);
+im_deblock = deblock(blocks,newIm_size);
+im_deblock = im_deblock + 128;
+imshow(uint8(im_deblock));
 
 % error = im(1:newIm_size(1),1:newIm_size(2)) - im_deblock 
 
