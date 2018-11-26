@@ -24,13 +24,17 @@ for i=1:numOfBlocks
     for j=1:bSize
         if ((i == numOfBlocks) && (j == bSize))
             if zzOPVec(1,(i-1)*bSize+j-1) == 0
-                pRLCoded(index-1) = 0;
-                txSize = txSize + 6 + 8;
-            else
-                pRLCoded(index) = 0;
-                pRLCoded(index+1) = 0;
-                txSize = txSize + 6 + 8;
+                        pRLCoded(index-1) = 0;
+                        txSize = txSize + 6 + 8;
+                    else
+                        pRLCoded(index) = 0;
+                        pRLCoded(index+1) = 0;
+                        index = index + 2;
+                        txSize = txSize + 6 + 8;
             end
+            pRLCoded(index) = 0;
+            pRLCoded(index+1) = 0;
+            txSize = txSize + 6 + 8;
         else
             switch j
                 case 1

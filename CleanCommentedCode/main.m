@@ -5,7 +5,7 @@ clc;
 
 %Read the image in Uint8 format and convert any rgb image to grayscale.
 
-im = imread('lena512.bmp');
+im = imread('moon.jpg');
 
 if numel(size(im)) > 2
     im = rgb2gray(im);
@@ -17,7 +17,7 @@ end
 im = double(im);
     
 im = im - 128;
-im = round(254*rand(8,18));                                                           %Test Image matrix
+% im = round(254*rand(8,18));                                                           %Test Image matrix
 
 % txt = sprintf('Number of Bytes required to transmit raw image = %d', size(im,1)*size(im,2));
 % disp(txt)
@@ -37,15 +37,22 @@ disp(txt)
 
 %% Quantization
 
-% Standard JPEG Quantization Matrix
-quantMJpeg = [16 11 10 16 24 40 51 61; ...
-    12 12 14 19 26 58 60 55; ...
-    14 13 16 24 40 57 69 56; ...
-    14 17 22 29 51 87 80 62; ...
-    18 22 37 56 68 109 103 77; ...
-    24 35 55 64 81 104 113 92; ...
-    49 64 78 87 103 121 120 101; ...
-    72 92 95 98 112 100 103 99;];
+QF = 0;                                                                     %Quantization Factor
+for i = 1:8
+    for j = 1:8
+        quantMJpeg(i,j) = 1+((i+j-1)*QF);
+    end
+end
+
+% % Standard JPEG Quantization Matrix
+% quantMJpeg = [16 11 10 16 24 40 51 61; ...
+%     12 12 14 19 26 58 60 55; ...
+%     14 13 16 24 40 57 69 56; ...
+%     14 17 22 29 51 87 80 62; ...
+%     18 22 37 56 68 109 103 77; ...
+%     24 35 55 64 81 104 113 92; ...
+%     49 64 78 87 103 121 120 101; ...
+%     72 92 95 98 112 100 103 99;];
 
 %Quantizing the DCT Matrix using standard JPEG Quantization Matrix
 im_8x8_Quant(1:8,1:8,:) = floor(im_8x8_DCT(1:8,1:8,:)./quantMJpeg(1:8,1:8));
@@ -66,17 +73,19 @@ zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks);
 
 bSize = 64;
 
-zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
-numOfBlocks = 2;
-bSize = 8;
+% zzOPVec = [64 52 -1 0 1 0 0 8 19 0 0 0 8 0 0 0];
+% numOfBlocks = 2;
+% bSize = 8;
 
 %Original RUn Length Encoder
-[oRLCoded, txSize] = origRLC(zzOPVec,numOfBlocks,bSize)
-txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
+[oRLCoded, txSizeOri] = origRLC(zzOPVec,numOfBlocks,bSize);
+sizeOrig = txSizeOri
+% txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 
 %Optimized Run Length Encoder
-[pRLCoded, txSize] = propRLC(zzOPVec,numOfBlocks,bSize)
-txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
+[pRLCoded, txSizeOpt] = propRLC(zzOPVec,numOfBlocks,bSize);
+sizeOpti = txSizeOpt
+% txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 
 %% Reverse Zig-Zag
 
