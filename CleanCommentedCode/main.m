@@ -5,7 +5,7 @@ clc;
 
 %Read the image in Uint8 format and convert any rgb image to grayscale.
 
-im = imread('lena512.bmp');
+im = imread('moon.jpg');
 
 if numel(size(im)) > 2
     im = rgb2gray(im);
@@ -37,24 +37,27 @@ disp(txt)
 
 %% Quantization
 
-qInd = 1;
+QF = 0.5;
+
+txt = sprintf('Quantization Factor used to quantize the image for compression = %0.5f', QF);
+disp(txt)
 
 % for QF = [0:0.2:2,3:1:10];                                                                     %Quantization Factor
-%     for i = 1:8
-%         for j = 1:8
-%             quantMJpeg(i,j) = 1+((i+j-1)*QF);
-%         end
-%     end
+    for i = 1:8
+        for j = 1:8
+            quantMJpeg(i,j) = 1+((i+j-1)*QF);
+        end
+    end
 
-    % Standard JPEG Quantization Matrix
-    quantMJpeg = [16 11 10 16 24 40 51 61; ...
-        12 12 14 19 26 58 60 55; ...
-        14 13 16 24 40 57 69 56; ...
-        14 17 22 29 51 87 80 62; ...
-        18 22 37 56 68 109 103 77; ...
-        24 35 55 64 81 104 113 92; ...
-        49 64 78 87 103 121 120 101; ...
-        72 92 95 98 112 100 103 99;];
+%     % Standard JPEG Quantization Matrix
+%     quantMJpeg = [16 11 10 16 24 40 51 61; ...
+%         12 12 14 19 26 58 60 55; ...
+%         14 13 16 24 40 57 69 56; ...
+%         14 17 22 29 51 87 80 62; ...
+%         18 22 37 56 68 109 103 77; ...
+%         24 35 55 64 81 104 113 92; ...
+%         49 64 78 87 103 121 120 101; ...
+%         72 92 95 98 112 100 103 99;];
 %         quantMJpeg = ones(8);
 
     %Quantizing the DCT Matrix using standard JPEG Quantization Matrix
@@ -65,8 +68,8 @@ qInd = 1;
     %Zigzag scan transform of all 8x8 quantized matrices to conacatenated row vectors
     %size of zzOPVec = (1, 8*8*numOfBlocks)
     zzOPVec = ZigZagscan(im_8x8_Quant,numOfBlocks);
-    size(zzOPVec);
-    8*8*numOfBlocks;
+%     size(zzOPVec);
+%     8*8*numOfBlocks;
 
     % sVec = size(zzOPVec)
     % sBlo = 64*numOfBlocks
@@ -84,12 +87,18 @@ qInd = 1;
 
     %Original Run Length Encoder
     [oRLCoded, txSizeOri] = origRLC(zzOPVec,numOfBlocks,bSize);
-    sizeOrig(qInd) = ceil(txSizeOri/8);
+    sizeOrig = ceil(txSizeOri/8);
+    txt = sprintf('Number of Bytes required to transmit image compressed with original JPEG = %d bytes', sizeOrig);
+    disp(txt)
+
     % txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 
     %Optimized Run Length Encoder
     [pRLCoded, txSizeOpt] = propRLC(zzOPVec,numOfBlocks,bSize);
-    sizeOpti(qInd) = ceil(txSizeOpt/8);
+    sizeOpti = ceil(txSizeOpt/8);
+    txt = sprintf('Number of Bytes required to transmit image compressed with optimized JPEG = %d bytes', sizeOpti);
+    disp(txt)
+
     % txBytes = ceil(txSize/8)                                                    %Number of bytes required to tranmit or store compressed image
 %     QuantizationValue(qInd) = QF;
 %     qInd = qInd + 1;
@@ -112,23 +121,31 @@ input2ZZScanOrig = invOrigRLC(oRLCoded,bSize);
 %Inverse Optimized RLC
 
 input2ZZScanOpti = invOptiRLC(pRLCoded,bSize);
-error2 = zzOPVec - input2ZZScanOpti;
-stem(error2)
+% error2 = zzOPVec - input2ZZScanOpti;
+% stem(error2)
 %Inverse Optimized RLC
 
 %% Reverse Zig-Zag
 
-blocks  = revZigZag(input2ZZScanOrig,numOfBlocks);
-blocks(1:8,1:8,:) = floor(blocks(1:8,1:8,:).*quantMJpeg(1:8,1:8));
+blocksOrig  = revZigZag(input2ZZScanOrig,numOfBlocks);
+blocksOrig(1:8,1:8,:) = floor(blocksOrig(1:8,1:8,:).*quantMJpeg(1:8,1:8));
+
+blocksOpti  = revZigZag(input2ZZScanOpti,numOfBlocks);
+blocksOpti(1:8,1:8,:) = floor(blocksOpti(1:8,1:8,:).*quantMJpeg(1:8,1:8));
 
 %% Reverse Quantization
 
 %% Reverse DCT and Block formation
 
-im_deblock = deblock(blocks,newIm_size);
-im_deblock = im_deblock + 128;
-imshow(uint8(im_deblock));
+im_deblockOrig = deblock(blocksOrig,newIm_size);
+im_deblockOrig = im_deblockOrig + 128;
+figure()
+imshow(uint8(im_deblockOrig));
 
+im_deblockOpti = deblock(blocksOpti,newIm_size);
+im_deblockOpti = im_deblockOpti + 128;
+figure()
+imshow(uint8(im_deblockOpti));
 % error = im(1:newIm_size(1),1:newIm_size(2)) - im_deblock 
 
 %% Tests
