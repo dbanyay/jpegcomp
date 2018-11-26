@@ -75,6 +75,8 @@ oRLCoded = origRLC(zzOPVec,numOfBlocks)
 
 %% Reverse DCT and Block formation
 
-im_deblock = deblock(im_8x8_DCT,newIm_size);
+% im_deblock = deblock(im_8x8_DCT,newIm_size);
+
+% error = im(1:newIm_size(1),1:newIm_size(2)) - im_deblock 
 
 %% Tests
