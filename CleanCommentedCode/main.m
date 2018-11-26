@@ -43,7 +43,7 @@ comparisonFun(numOfBlocks,sizeOfRawTxIm,im_8x8_DCT,bSize);
 
 %% Quantization
 
-QF = 0.5;
+QF = 2;
 
 txt = sprintf('Quantization Factor used to quantize the image for compression = %0.5f', QF);
 disp(txt)
