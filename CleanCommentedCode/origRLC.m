@@ -8,7 +8,8 @@ function [oRLCoded, txSize] = origRLC(zzOPVec,numOfBlocks,bSize);
 %RUNLENGTH is the number of zeroes that came before this non-zero AC coefficient. 
 %SIZE is the number of bits required to represent x. 
 %AMPLITUDE is the bit-representation of x. 
-%For ease and comparison purpose we use 6 bits to encode (RUNLENGTH) & 
+%For ease and comparison purpose we use 6 bits to encode (RUNLENGTH), 
+%as the maximum number of consecutive zeros can be 63 (for 8 x 8 blocks) & 
 %8 bits for encoding (AMPLITUDE), ignoring SIZE.
 %This would also help in cases where we get longer than 15 consecutive zeros.
 %bSize is block size that is by default 64 and for test purpose 8.
